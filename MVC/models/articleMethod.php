@@ -1,6 +1,7 @@
  <?php
  session_start();
- header("content-type:text/html; charset=utf-8");
+header("content-type:text/html; charset=utf-8");
+
 class articleMethod{
     function Sharearticle($db,$username,$area,$title,$sort,$address,$content){
         $datetime = date ("Y-m-d H:i:s" , mktime(date('H')+8, date('i'), date('s'), date('m'), date('d'), date('Y'))) ; 
