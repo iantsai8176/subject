@@ -98,10 +98,7 @@ session_start();
                         <span class="password_error">*</span>
                         <br />
 
-                        <div class="checkbox">
-                            <input id="remember" type="checkbox" />
-                            <label for="remember">Remember me on this computer</label>
-                        </div>
+                        
 
                         <div class="action_btns">
                             <div class="submit_on"><input type="submit" id="OK" name="OK" class="btn btn_red" value="login" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
@@ -205,27 +202,22 @@ session_start();
         <div class="row">
             <!-- Blog Entries Column -->
             <div class="col-md-8">
-                <h1 class="page-header">
-                    日本は來ます
+                <h1 class="page-header" align="center">
+                    日本は
                     <img src="views/img/go.jpg" width="300">
+                    來ます
                 </h1>
                 
                 <!-- First Blog Post -->
-                <style type="text/css">
-                    .a {
-                        width: 700;
-                        height: 300;
-                    }
-                </style>
+                
                 <?php 
                 while ($row = $data["db"]->fetch()) : 
                 preg_match('/<img[^>]+>/i', $row["content"], $match); //取得文章第一個圖片
-                preg_match('/<p>[^<](.*?)<\/p>/i', $row["content"], $match2);
+                $text=str_replace(array("\r","\n","\t","\s"), '', $row["content"]);
+                preg_match('/<p>[^<](.*?)<\/p>/i', $text, $match2); ///文章第一段文字
+                $result_text = substr($match2[0],0,230);
                 ?>
-                <script>
-                    var content = "<?php echo $row['content'];?>";
-                    var a = content.indexOf("<img>");
-                </script>
+                
                 <h2>
                     <span><?php echo $row["title"]?></span>
                     <!--//判斷當前使用者是否可修該刪除文章-->
@@ -245,8 +237,9 @@ session_start();
                     
                     <?php print_r($match[0])."&nbspheight='300'"."width='600'" ?> </div> 
                 <hr>
-                <a class="btn btn-primary" href="Home/showArticle?PAGE=<?php echo $row["no"];?>">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
-                <span></span>
+                <div><span><?php echo $result_text."...";?></span></div>
+                <div><a class="btn btn-primary" href="Home/showArticle?PAGE=<?php echo $row["no"];?>">Read More <span class="glyphicon glyphicon-chevron-right"></span></a></div>
+                
                 <hr>
                 <?php endwhile ?>
                 <!-- Pager -->
