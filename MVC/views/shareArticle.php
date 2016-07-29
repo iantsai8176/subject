@@ -37,7 +37,7 @@ session_start();
 
 </head>
 
-<body background="views/img/images-2.jpg">
+<body background="../views/img/images-2.jpg">
 
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">

@@ -88,12 +88,12 @@ session_start();
                 <!-- Username & Password Login form -->
                 <div class="user_login">
                     <form id="form1" name="form1" method="post" action="Home/login" onClick="return false">
-                        <label>Email / Username</label>
+                        <label>帳號</label>
                         <input type="text" id="username" name="username" />
                         <span class="username_error">*</span>
                         <br />
 
-                        <label>Password</label>
+                        <label>密碼</label>
                         <input type="password" id="password" name="password" />
                         <span class="password_error">*</span>
                         <br />
@@ -101,8 +101,8 @@ session_start();
                         
 
                         <div class="action_btns">
-                            <div class="submit_on"><input type="submit" id="OK" name="OK" class="btn btn_red" value="login" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
-                            <div class="one_half last"><a href="#" id="register_form" class="btn ">sign up</a></div>
+                            <div class="submit_on"><input type="submit" id="OK" name="OK" class="btn btn_red" value="登入" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
+                            <div class="one_half last"><a href="#" id="register_form" class="btn ">註冊</a></div>
                         </div>
                     </form>
                     <!--<a href="#" class="forgot_password">Forgot password?</a>-->
@@ -110,24 +110,24 @@ session_start();
                 <!-- Register Form -->
                 <div class="user_register">
                     <form id="form2" name="form2" method="post" action="Home/add_member" onClick="return false">
-                        <label>Full Name</label>
+                        <label>帳號</label>
                         <input type="text" id="newname" name="newname" />
                         <span class="newname_error">*</span>
                         <br />
 
-                        <label>Email Address</label>
+                        <label>信箱</label>
                         <input type="email" id="newemail" name="newemail" />
                         <span class="newemail_error">*</span>
                         <br />
 
-                        <label>Password</label>
+                        <label>密碼</label>
                         <input type="password" id="newpsw" name="newpsw" />
                         <span class="newpsw_error">*</span>
                         <br />
 
                         <div class="action_btns">
-                            <div class="submit_on"><input type="submit" id="confirm" name="confirm" class="btn btn_red" value="Regist" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
-                            <div class="one_half last"><a href="#" class="btn back_btn">Back</a></div>
+                            <div class="submit_on"><input type="submit" id="confirm" name="confirm" class="btn btn_red" value="確認" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
+                            <div class="one_half last"><a href="#" class="btn back_btn">返回</a></div>
                         </div>
                     </form>
                 </div>
@@ -211,11 +211,12 @@ session_start();
                 <!-- First Blog Post -->
                 
                 <?php 
-                while ($row = $data["db"]->fetch()) : 
+                while ($row = $data["db_page"]->fetch()) : 
                 preg_match('/<img[^>]+>/i', $row["content"], $match); //取得文章第一個圖片
                 $text=str_replace(array("\r","\n","\t","\s"), '', $row["content"]);
                 preg_match('/<p>[^<](.*?)<\/p>/i', $text, $match2); ///文章第一段文字
-                $result_text = substr($match2[0],0,230);
+                $text2 = trim($match2[0]);
+                $result_text = substr($text2,0);
                 ?>
                 
                 <h2>
@@ -273,6 +274,76 @@ session_start();
             </div>
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-4">
+                <!--聊天室-->
+                <div class="well">
+                    <script>
+                      function MakeRequest()
+                        {
+                        	$.ajax({
+                        		type:"GET",
+                        		url:"Home/chat?rq=msg",
+                        		data:{newmsg:$("#msg").val()},
+                        		dataType:"json",
+                        		success:function(data){
+                        			//$("#ResponseDiv").append('<div>'+data["username"]+':'+data["msg"]+'</div>')
+                        			$("#msg").val("");
+                        		}
+                        	});
+                        }
+            
+                        $(document).ready(function(){
+                        	setInterval(startRequest,3000);
+                        })
+                        
+                        function startRequest(){
+                        	$.ajax({
+                        		type:"GET",
+                        		url:"Home/chat?rq=update",
+                        		data:{capturemsg:"1"},
+                        		dataType:"json",
+                        		success:function(data){
+                        			//var array = JSON.parse(data);
+                        			console.log(data)
+                        			if(data["status"] == 0){
+                        				console.log(data);
+                        				$("#ResponseDiv").append('<div>'+data["username"]+':'+data["msg"]+'</div>')
+                        				$('#ResponseDiv').scrollTop ($('#ResponseDiv').height());
+                        			}
+                        			else{
+                        			}
+                        		}
+                        	})
+                        
+                        }
+                    </script>
+                    
+                    <style type="text/css">
+                        #ResponseDiv {
+                            width: 300px;
+                            height: 180px;
+                            overflow: auto;
+                            border: 2px solid gray;
+                            margin-bottom: 15px;
+                        }
+                    </style>
+                    <h4>留言板</h4>
+                    <div id="ResponseDiv">
+                        <?php
+                    		$sql = "select * from (select * from message order by no desc limit 10) as data order by no asc";
+                    		$result = $data["db"]->query($sql);
+                    		while($row =$result->fetch()){
+                    		    
+                    		    echo "<div>".$row['username'].":".$row['msg']."</div>";
+                    		}
+                    	?>
+                    </div>
+                    <div>
+                        <input type="textarea" id="msg" placeholder="..." />
+                        <input type="button" id="btnok" value="送出" onclick="MakeRequest()" />
+                    </div>
+                </div>
+                
+                <!--每五分鐘向網頁抓取資料-->
                 <script>
                     start();
                     $(document).ready(function() {

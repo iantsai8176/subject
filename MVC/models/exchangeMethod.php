@@ -12,7 +12,7 @@ class exchangeMethod{
             
             // 2. 設定 / 調整參數
             curl_setopt($ch, CURLOPT_URL, "http://www.findrate.tw/currency.php#.V48sGvm7hHw");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//將curl_exec()獲取的訊息以文件流的形式返回，而不是直接輸出。
             curl_setopt($ch, CURLOPT_HEADER, 0);
             
             // 3. 執行，取回 response 結果
@@ -32,11 +32,11 @@ class exchangeMethod{
             {
                 for($i=1;$i<5;$i++)
                 {
-                    $title = $xpath->query("./tr[10]/td[$i]", $entry);//*[@id="right"]/table/tbody/tr[10]
+                    $title = $xpath->query("./tr[10]/td[$i]", $entry);
                     $data[$i]=$title->item(0)->nodeValue;
                 }
             }
-            echo json_encode($data);
+            return json_encode($data);
         }
     }
 }

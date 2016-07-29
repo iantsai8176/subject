@@ -15,10 +15,12 @@ class caculation{
         $start = ($page-1)*$per;                //每一頁開始的資料序號
         $getpage_result = $db->query($sql.' LIMIT '.$start.', '.$per) or die("Error".$page);//從第Ｎ筆取Ｍ筆資料
         $array["page"] = $page;
-        $array["db"] = $getpage_result;
+        $array["db_page"] = $getpage_result;
         $array["pages"] = $pages;
+        $array["db"] = $db;
         return $array;
     } //文章分頁
+    
     
 }
 ?>

@@ -57,7 +57,7 @@ session_start();
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a id="modal_trigger" href=<?php echo (!$_SESSION["login"]) ? "#modal":"logout"?>>
+                        <a id="modal_trigger" href=<?php echo (!$_SESSION["login"]) ? "#modal":"../Home/logout"?>>
                             <?php echo (!isset($_SESSION["login"]))? "登入/註冊" : $_SESSION["login"]."&nbsp登出" ?>
                         </a>
                     </li>
@@ -91,24 +91,21 @@ session_start();
                 <!-- Username & Password Login form -->
                 <div class="user_login">
                     <form id="form1" name="form1" method="post" action="login" onClick="return false">
-                        <label>Email / Username</label>
+                        <label>帳號</label>
                         <input type="text" id="username" name="username" />
                         <span class="username_error">*</span>
                         <br />
 
-                        <label>Password</label>
+                        <label>密碼</label>
                         <input type="password" id="password" name="password" />
                         <span class="password_error">*</span>
                         <br />
 
-                        <div class="checkbox">
-                            <input id="remember" type="checkbox" />
-                            <label for="remember">Remember me on this computer</label>
-                        </div>
+                        
 
                         <div class="action_btns">
-                            <div class="submit_on"><input type="submit" id="OK" name="OK" class="btn btn_red" value="login" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
-                            <div class="one_half last"><a href="#" id="register_form" class="btn ">sign up</a></div>
+                            <div class="submit_on"><input type="submit" id="OK" name="OK" class="btn btn_red" value="登入" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
+                            <div class="one_half last"><a href="#" id="register_form" class="btn ">註冊</a></div>
                         </div>
                     </form>
                     <!--<a href="#" class="forgot_password">Forgot password?</a>-->
@@ -116,24 +113,24 @@ session_start();
                 <!-- Register Form -->
                 <div class="user_register">
                     <form id="form2" name="form2" method="post" action="add_member" onClick="return false">
-                        <label>Full Name</label>
+                        <label>帳號</label>
                         <input type="text" id="newname" name="newname" />
                         <span class="newname_error">*</span>
                         <br />
 
-                        <label>Email Address</label>
+                        <label>信箱</label>
                         <input type="email" id="newemail" name="newemail" />
                         <span class="newemail_error">*</span>
                         <br />
 
-                        <label>Password</label>
+                        <label>密碼</label>
                         <input type="password" id="newpsw" name="newpsw" />
                         <span class="newpsw_error">*</span>
                         <br />
 
                         <div class="action_btns">
-                            <div class="submit_on"><input type="submit" id="confirm" name="confirm" class="btn btn_red" value="Regist" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
-                            <div class="one_half last"><a href="#" class="btn back_btn">Back</a></div>
+                            <div class="submit_on"><input type="submit" id="confirm" name="confirm" class="btn btn_red" value="確認" style="width:140px"><i class="fa fa-angle-double-left"></i></div>
+                            <div class="one_half last"><a href="#" class="btn back_btn">返回</a></div>
                         </div>
                     </form>
                 </div>
@@ -141,7 +138,12 @@ session_start();
         </div>
     </div>
     <script type="text/javascript">
-        // ---------controll popup form
+        //---------controll popup form
+        $("#modal_trigger").leanModal({//對話筐插件
+            top: 200,
+            overlay: 0.6,
+             closeButton: ".modal_close"
+        });
         $(function() {
                 // Calling Register Form
                 $("#register_form").click(function() {
@@ -177,7 +179,7 @@ session_start();
                 })
             })
             //-------judge form2 data not null---
-        emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;//正規表示法(判斷是否為有效email)
+        emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/; //正規表示法(判斷email是否為有效格式)
         $(document).ready(function() {
             $("#confirm").click(function() {
                 if ($("#newname").val() == "") {
