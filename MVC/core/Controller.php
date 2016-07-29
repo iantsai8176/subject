@@ -2,6 +2,7 @@
 
 class Controller {
     public function model($model) {
+        require_once "../MVC/core/PDOsql.php";
         require_once "../MVC/models/$model.php";
         return new $model ();
     }

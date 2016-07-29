@@ -1,16 +1,19 @@
 <?php
 class chatMethod{
-    function getchatmessage($db,$rq,$user){
+    function getchatmessage($rq,$user){
 if(isset($_GET["rq"])):
+    $PDO = new PDOsql();
+    $db = $PDO->getConnection();
     switch ($_GET["rq"]):
         //訊息存入資料庫
         case 'msg':
             $msg = $_GET['newmsg'];
-            $date = date("H:i:s");
+            $date = date ("H:i:s" , mktime(date('H')+8, date('i'), date('s'))) ; 
             $sql = "insert into message(username,msg,time) value ('$user','$msg','$date')";
             $result = $db->query($sql);
             $array["msg"] = $msg;
             $array["username"] = $user;
+            $array["time"] = $date;
             break;
         //更新訊息印出
         case 'update':
@@ -26,12 +29,14 @@ if(isset($_GET["rq"])):
                     $array["username"] = $row["username"];
                     $array["msg"] = $row["msg"];
                     $array["status"] = 0;
+                    $array["time"] = $row["time"];
                     $_SESSION["no"] =$row["no"];
                 }
                 else
                 {
                     $array["username"] = $array_temp["username"];
                     $array["msg"] = $array_temp["msg"];
+                    $array["time"] = $row["time"];
                     $array["status"] = 1;
                     
                 }

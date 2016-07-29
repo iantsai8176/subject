@@ -4,19 +4,10 @@ class HomeController extends Controller {
     
     //首頁
     function index() {
-        //資料庫連線
-        $db = $this->get_connectsql();
         //呼叫頁數計算方法
         $call_page = $this->model("caculation");
-        $return_page = $call_page->page($db);
+        $return_page = $call_page->page();
         $this->view("index",$return_page);
-    } 
-    
-    //取得資料庫連線
-    function get_connectsql(){
-        $connect = $this->model("opensql");
-        $db_get = $connect->sql();
-        return $db_get;
     } 
     
     //會員登入
@@ -24,12 +15,11 @@ class HomeController extends Controller {
     //   $url=$this->view("index");
             $tempName = $_POST["username"];
             $tempPass = $_POST["password"];
-            //資料庫連線
-            $db = $this->get_connectsql();
             //呼叫方法
             $call_login = $this->model("member");
-            $return_login = $call_login->Dologin($db,$tempName,$tempPass);
+            $return_login = $call_login->Dologin($tempName,$tempPass);
             $this->view("echo_json",$return_login);
+            //結束連線
    }
    
    //會員登出
@@ -37,6 +27,7 @@ class HomeController extends Controller {
        $call_logout = $this->model("member");
        $return_logout = $call_logout->Dologout();
        $this->view("echo_json",$return_logout);
+       $db = null; 
    }
    
    //會員加入
@@ -44,28 +35,27 @@ class HomeController extends Controller {
         $Newname = $_POST["newname"];
         $Newpsw = $_POST["newpsw"];
         $Newemail = $_POST["newemail"];
-        //資料庫連線
-        $db = $this->get_connectsql();
         //呼叫方法
         $call_addmember = $this->model("member");
-        $return_addmember = $call_addmember->Doaddmember($db,$Newname,$Newpsw,$Newemail);
+        $return_addmember = $call_addmember->Doaddmember($Newname,$Newpsw,$Newemail);
         $this->view("echo_json",$return_addmember);
+        $db = null; 
         
    }
    
    //會員資料修改
    function modify(){//會員修改
         $this->view("modify");
-        if($_POST["Modify_email"]){
-        $EMAIL=$_POST["Modify_email"];
-        $PSW=$_POST["Modify_psw"];
-        //資料庫連線
-        $db = $this->get_connectsql();
-        //呼叫方法
-        $call_modify = $this->model("membermodify");
-        $return_modify = $call_modify->Domodify($db,$PSW,$EMAIL);
-        $this->view("echo_json",$return_modify);
+        if($_POST["Modify_email"])
+        {
+            $EMAIL=$_POST["Modify_email"];
+            $PSW=$_POST["Modify_psw"];
+            //呼叫方法
+            $call_modify = $this->model("membermodify");
+            $return_modify = $call_modify->Domodify($PSW,$EMAIL);
+            $this->view("echo_json",$return_modify);
         }
+        $db = null; 
    }
    
     //文章發佈
@@ -79,22 +69,21 @@ class HomeController extends Controller {
         $address = $_POST["address"];
         $content = $_POST["note"];
         $_SESSION["title"] = $title;
-        if(isset($_POST["note"])){
-        //資料庫連線
-        $db = $this->get_connectsql();
-        //呼叫方法
-        $call_article = $this->model("membershararticle");
-        $return_article = $call_article->Sharearticle($db,$username,$area,$title,$sort,$address,$content);
+        if(isset($_POST["note"]))
+        {
+            //呼叫方法
+            $call_article = $this->model("articleMethod");
+            $return_article = $call_article->Sharearticle($username,$area,$title,$sort,$address,$content);
+            $this->view("echo_json",$return_article);
         }
    }
    
    //預修改之文章顯示
    function modifyShowArticle(){
        $page = $_GET["page"];
-       $db = $this->get_connectsql();
        //呼叫方法->從資料庫撈取欲修改文章
        $call_article = $this->model("articleMethod");
-       $return_article = $call_article->ModifyShowArticle($db,$page);
+       $return_article = $call_article->ModifyShowArticle($page);
        $this->view("shareArticle",$return_article);
        //呼叫修改方法
    } 
@@ -109,43 +98,39 @@ class HomeController extends Controller {
         $content = $_POST["note"];
         $_SESSION["title"] = $title;
         $page = $_SESSION["page"];
-        if(isset($_POST["note"])){
-        //資料庫連線
-        $db = $this->get_connectsql();
-        //呼叫方法
-        $call_article = $this->model("articleMethod");
-        $return_article = $call_article->ModifyArticle($db,$username,$area,$title,$sort,$address,$content,$page);
+        if(isset($_POST["note"]))
+        {
+            //呼叫方法
+            $call_article = $this->model("articleMethod");
+            $return_article = $call_article->ModifyArticle($username,$area,$title,$sort,$address,$content,$page);
+            $this->view("echo_json",$return_article);
         }
    } 
    
    //文章刪除
    function deleteArticle(){
        $page = $_GET["page"];
-       //資料庫連線
-        $db = $this->get_connectsql();
         //呼叫方法
         $call_article = $this->model("articleMethod");
-        $return_article = $call_article->DeleteArticle($db,$page);
+        $return_article = $call_article->DeleteArticle($page);
+        $this->view("echo_json",$return_article);
    } 
    
    //文章內容瀏覽
    function showArticle(){
-        //資料庫連線
-        $db = $this->get_connectsql();
         //呼叫方法
         $call_article = $this->model("articleMethod");
-        $return_article = $call_article->Showarticle($db);
+        $return_article = $call_article->Showarticle();
         $this->view("article",$return_article);
    } 
    
    //文章評論
    function comittee(){
         $rq=$_GET["rq"];
-        //資料庫連線
-        $db = $this->get_connectsql();
         //呼叫方法
         $call_comittee = $this->model("articleMethod");
-        $return_comittee = $call_comittee->ComitteeHandel($db,$rq);
+        $return_comittee = $call_comittee->ComitteeHandel($rq);
+        $this->view("echo_json",$return_comittee);
    } 
    
    //即時匯率
@@ -159,15 +144,13 @@ class HomeController extends Controller {
    
    //即時聊天//
    function chat(){
-       $get_rq = $_GET["rq"];
-       $user = $_SESSION["login"];
-       $db = $this->get_connectsql();
+        $get_rq = $_GET["rq"];
+        $user = $_SESSION["login"];
         //呼叫方法
         $call_chatMethod = $this->model("chatMethod");
-        $return_chatMethod = $call_chatMethod->getchatmessage($db,$rq,$user);
-        echo $return_chatMethod;
+        $return_chatMethod = $call_chatMethod->getchatmessage($rq,$user);
         
-        $this->view("echo_json",$return_comittee);
+        $this->view("echo_json",$return_chatMethod);
    }
     
 }

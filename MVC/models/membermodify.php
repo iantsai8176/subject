@@ -1,14 +1,19 @@
 <?php
 class membermodify{
     //---------會員修改---------------------
-    function Domodify($db,$mdpsw,$mdemail){
+    function Domodify($mdpsw,$mdemail){
+        $PDO = new PDOsql();
+        $db = $PDO->getConnection();
         $mdusername = $_SESSION["login"];
-        $sql = "update member set password='$mdpsw',email='$mdemail' where username='$mdusername'";
-        if($db->query($sql))
+        $do_db = $db->prepare("update member set password=:mdpsw,email=:mdemail where username=:mdusername");
+        $do_db->bindParam("mdpsw", $mdpsw, PDO::PARAM_INT, 50);
+        $do_db->bindParam("mdemail", $mdemail, PDO::PARAM_STR, 50);
+        $do_db->bindParam("mdusername", $mdusername, PDO::PARAM_STR, 50);
+        if($do_db->execute())
         {
-            return "<script>alert(\"修改成功\")\nwindow.location.href='../Home'</script>";
-            $_SESSION["EMAIL"] = $mdemail;
+             $_SESSION["EMAIL"] = $mdemail;
             $_SESSION["PSW"] = $mdpsw;
+            return "<script>alert(\"修改成功\")\nwindow.location.href='../Home'</script>";
         }
         else
         {

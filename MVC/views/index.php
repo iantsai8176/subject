@@ -133,70 +133,9 @@ session_start();
                 </div>
             </section>
         </div>
-    </div>
-    <script type="text/javascript">
-        //---------controll popup form
-        $("#modal_trigger").leanModal({//對話筐插件
-            top: 200,
-            overlay: 0.6,
-            closeButton: ".modal_close"
-        });
-        $(function() {
-                // Calling Register Form
-                $("#register_form").click(function() {
-                    $(".user_login").hide();
-                    $(".user_register").show();
-                    $(".header_title").text('Register');
-                    return false;
-                });
-
-                //Going back to Social Forms
-                $(".back_btn").click(function() {
-                    $(".user_login").show();
-                    $(".user_register").hide();
-                    $(".header_title").text('Login');
-                    return false;
-                });
-
-            })
-            //--------Judge form1 data not null---
-        $(document).ready(function() {
-                $("#OK").click(function() {
-                    if ($("#username").val() == "") {
-                        $(".username_error").text("*必填").css("color","red");
-                        eval("document.form1['username'].focus()");
-                    }
-                    else if ($("#password").val() == "") {
-                        $(".password_error").text("*必填").css("color","red");
-                        eval("document.form1['password'].focus()");
-                    }
-                    else {
-                        document.form1.submit();
-                    }
-                })
-            })
-            //-------judge form2 data not null---
-        emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/; //正規表示法(判斷email是否為有效格式)
-        $(document).ready(function() {
-            $("#confirm").click(function() {
-                if ($("#newname").val() == "") {
-                    $(".newname_error").text("*必填").css("color","red");
-                    eval("document.form2['newname'].focus()");
-                }
-                else if (($("#newemail").val().search(emailRule) == -1)) {
-                    $(".newemail_error").text("*請填入有效Email").css("color","red");
-                    eval("document.form2['newemail'].focus()");
-                }
-                else if (($("#newpsw").val() == "")) {
-                    $(".newpsw_error").text("*必填").css("color","red");
-                    eval("document.form2['newpsw'].focus()");
-                }
-                else {
-                    document.form2.submit();
-                }
-            })
-        })
-    </script>
+    </div> 
+    <!--//---------controll popup form-->
+    <script src="views/methodjs/popup_form.js"></script>
     <!-- Page Content -->
     <div class="container">
         <div class="row">
@@ -209,7 +148,6 @@ session_start();
                 </h1>
                 
                 <!-- First Blog Post -->
-                
                 <?php 
                 while ($row = $data["db_page"]->fetch()) : 
                 preg_match('/<img[^>]+>/i', $row["content"], $match); //取得文章第一個圖片
@@ -218,7 +156,6 @@ session_start();
                 $text2 = trim($match2[0]);
                 $result_text = substr($text2,0);
                 ?>
-                
                 <h2>
                     <span><?php echo $row["title"]?></span>
                     <!--//判斷當前使用者是否可修該刪除文章-->
@@ -276,46 +213,8 @@ session_start();
             <div class="col-md-4">
                 <!--聊天室-->
                 <div class="well">
-                    <script>
-                      function MakeRequest()
-                        {
-                        	$.ajax({
-                        		type:"GET",
-                        		url:"Home/chat?rq=msg",
-                        		data:{newmsg:$("#msg").val()},
-                        		dataType:"json",
-                        		success:function(data){
-                        			//$("#ResponseDiv").append('<div>'+data["username"]+':'+data["msg"]+'</div>')
-                        			$("#msg").val("");
-                        		}
-                        	});
-                        }
-            
-                        $(document).ready(function(){
-                        	setInterval(startRequest,3000);
-                        })
-                        
-                        function startRequest(){
-                        	$.ajax({
-                        		type:"GET",
-                        		url:"Home/chat?rq=update",
-                        		data:{capturemsg:"1"},
-                        		dataType:"json",
-                        		success:function(data){
-                        			//var array = JSON.parse(data);
-                        			console.log(data)
-                        			if(data["status"] == 0){
-                        				console.log(data);
-                        				$("#ResponseDiv").append('<div>'+data["username"]+':'+data["msg"]+'</div>')
-                        				$('#ResponseDiv').scrollTop ($('#ResponseDiv').height());
-                        			}
-                        			else{
-                        			}
-                        		}
-                        	})
-                        
-                        }
-                    </script>
+                    
+                    <script src="views/methodjs/chat.js"></script>
                     
                     <style type="text/css">
                         #ResponseDiv {
@@ -332,54 +231,21 @@ session_start();
                     		$sql = "select * from (select * from message order by no desc limit 10) as data order by no asc";
                     		$result = $data["db"]->query($sql);
                     		while($row =$result->fetch()){
-                    		    
-                    		    echo "<div>".$row['username'].":".$row['msg']."</div>";
+                    		    echo "<div>[".$row["time"].']'.$row['username'].":".$row['msg']."</div>";
+                    		    echo "<script>$('#ResponseDiv').scrollTop($('#ResponseDiv').height());</script>";
                     		}
+                    		
                     	?>
                     </div>
                     <div>
-                        <input type="textarea" id="msg" placeholder="..." />
+                        <input type="textarea" id="msg" placeholder="..." size="31px" />
                         <input type="button" id="btnok" value="送出" onclick="MakeRequest()" />
                     </div>
                 </div>
                 
                 <!--每五分鐘向網頁抓取資料-->
-                <script>
-                    start();
-                    $(document).ready(function() {
-                        $("#cal").click(function() {
-                            if (!isNaN($("#num").val())) { //isNaN檢查函數是否是非數值
-                                $.get("Home/exchange", {
-                                    num: $("#num").val(),
-                                    ex: $("#new").text()
-                                }, function(data) {
-                                    console.log(data);
-                                    $("#answer").text(data + " JPY").css("color", "blue");
-                                    $("#cal").attr("disabled", true);
-                                })
-                            }
-                            else {
-                                $("#num").val("").focus();
-                                $("#answer").text("  請輸入數值").css("color", "blue");
-                            }
-
-                            $("#clear").click(function() {
-                                $("#answer").text("");
-                                $("#num").val("");
-                                $("#cal").attr("disabled", false);
-                            })
-                        });
-                        setInterval(start, 30000);
-                    });
-
-                    function start() {
-                        $.get("Home/exchange", function(data) {
-                            var array = JSON.parse(data);
-                            $("#bank").text(array[2]).css("font-family");
-                            $("#new").text(array[4]).css("font-family");
-                        });
-                    }
-                </script>
+                <script src="views/methodjs/exchange.js"></script>
+                
                 <div class="well">
                     <h4>最新匯率<h4>
                         <div>
