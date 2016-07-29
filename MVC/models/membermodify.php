@@ -5,7 +5,7 @@ class membermodify{
         $PDO = new PDOsql();
         $db = $PDO->getConnection();
         $mdusername = $_SESSION["login"];
-        $do_db = $db->prepare("update member set password=:mdpsw,email=:mdemail where username=:mdusername");
+        $do_db = $db->prepare("UPDATE member set password=:mdpsw,email=:mdemail where username=:mdusername");
         $do_db->bindParam("mdpsw", $mdpsw, PDO::PARAM_INT, 50);
         $do_db->bindParam("mdemail", $mdemail, PDO::PARAM_STR, 50);
         $do_db->bindParam("mdusername", $mdusername, PDO::PARAM_STR, 50);

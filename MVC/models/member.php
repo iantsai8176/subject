@@ -7,7 +7,7 @@ class member{
     //執行SQL指令
     $PDO = new PDOsql();
     $db = $PDO->getConnection();
-    $do_db = $db->prepare("select * from member where username=:name && password=:pass");
+    $do_db = $db->prepare("SELECT * from member where username=:name && password=:pass");
     $do_db->bindParam("name",$name,PDO::PARAM_STR,50);
     $do_db->bindParam("pass",$pass,PDO::PARAM_STR,50);
     $do_db->execute();
@@ -36,7 +36,7 @@ class member{
         //執行資料庫指令 搜尋是否帳號重複
         $PDO = new PDOsql();
         $db = $PDO->getConnection();
-        $do_search_db = $db->prepare("select username from member where username=:name");
+        $do_search_db = $db->prepare("SELECT username from member where username=:name");
         $do_search_db->bindParam("name",$name,PDO::PARAM_STR,50);
         $do_search_db->execute();
         
@@ -47,7 +47,7 @@ class member{
             try
             {
                 $datetime = date ("Y-m-d H:i:s" , mktime(date('H')+8, date('i'), date('s'), date('m'), date('d'), date('Y'))) ; 
-                $add_db = $db->prepare("insert into member(username, password,email,time) value (:name,:psw,:mail,:time)");
+                $add_db = $db->prepare("INSERT into member(username, password,email,time) value (:name,:psw,:mail,:time)");
                 $add_db->bindParam("name",$name,PDO::PARAM_STR,50);
                 $add_db->bindParam("psw",$psw,PDO::PARAM_INT,50);
                 $add_db->bindParam("mail",$mail,PDO::PARAM_STR,50);

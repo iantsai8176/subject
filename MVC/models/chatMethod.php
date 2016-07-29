@@ -9,7 +9,7 @@ if(isset($_GET["rq"])):
         case 'msg':
             $msg = $_GET['newmsg'];
             $date = date ("H:i:s" , mktime(date('H')+8, date('i'), date('s'))) ; 
-            $sql = "insert into message(username,msg,time) value ('$user','$msg','$date')";
+            $sql = "INSERT into message(username,msg,time) value ('$user','$msg','$date')";
             $result = $db->query($sql);
             $array["msg"] = $msg;
             $array["username"] = $user;
@@ -17,7 +17,7 @@ if(isset($_GET["rq"])):
             break;
         //更新訊息印出
         case 'update':
-            $sql = "select * from message order by no desc limit 1";
+            $sql = "SELECT * from message order by no desc limit 1";
             $result = $db->query($sql);
             $row = $result->fetch();
                 if($_SESSION["no"] == ""){
