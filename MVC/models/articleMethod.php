@@ -75,9 +75,11 @@ class articleMethod{
         return $array;
     } //撈取預修改文章
     
-    function ModifyArticle($username,$area,$title,$sort,$address,$content,$page){
+    function ModifyArticle($area,$title,$sort,$address,$content,$page){
         $PDO = new PDOsql();
         $db = $PDO->getConnection();
+        $username = $_SESSION["login"];
+        $page = $_SESSION["page"];
         $datetime = date ("Y-m-d H:i:s" , mktime(date('H')+8, date('i'), date('s'), date('m'), date('d'), date('Y'))) ; 
         $do_db = $db->prepare("UPDATE article set username=:username,area=:area,title=:title,sort=:sort,address=:address,content=:content,time=:datetime where no=:page");
         $do_db->bindParam("username", $username, PDO::PARAM_STR, 50);
@@ -112,9 +114,10 @@ class articleMethod{
         }
     } //刪除文章
     
-    function Sharearticle($username,$area,$title,$sort,$address,$content){
+    function Sharearticle($area,$title,$sort,$address,$content){
         $PDO = new PDOsql();
         $db = $PDO->getConnection();
+        $username = $_SESSION["login"];
         $datetime = date ("Y-m-d H:i:s" , mktime(date('H')+8, date('i'), date('s'), date('m'), date('d'), date('Y'))) ; 
         $do_db = $db->prepare("INSERT into article(username,area,title,sort,address,content,time) value (:username,:area,:title,:sort,:address,:content,:datetime)");
         $do_db->bindParam("username", $username, PDO::PARAM_STR, 50);

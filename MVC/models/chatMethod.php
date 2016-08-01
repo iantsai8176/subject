@@ -1,9 +1,10 @@
 <?php
 class chatMethod{
-    function getchatmessage($rq,$user){
+    function getchatmessage($rq){
 if(isset($_GET["rq"])):
     $PDO = new PDOsql();
     $db = $PDO->getConnection();
+    $user = $_SESSION["login"];
     switch ($_GET["rq"]):
         //訊息存入資料庫
         case 'msg':

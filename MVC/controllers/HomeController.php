@@ -62,7 +62,6 @@ class HomeController extends Controller {
    function shareArticle(){
         $this->view("shareArticle"); //導引至view
         //接收資料
-        $username = $_SESSION["login"];
         $area = $_POST["area"];
         $title = $_POST["title"];
         $sort = $_POST["sort"];
@@ -73,7 +72,7 @@ class HomeController extends Controller {
         {
             //呼叫方法
             $call_article = $this->model("articleMethod");
-            $return_article = $call_article->Sharearticle($username,$area,$title,$sort,$address,$content);
+            $return_article = $call_article->Sharearticle($area,$title,$sort,$address,$content);
             $this->view("echo_json",$return_article);
         }
    }
@@ -90,19 +89,17 @@ class HomeController extends Controller {
    
    //文章修改
    function modifyArticle(){
-        $username = $_SESSION["login"];
         $area = $_POST["area"];
         $title = $_POST["title"];
         $sort = $_POST["sort"];
         $address = $_POST["address"];
         $content = $_POST["note"];
         $_SESSION["title"] = $title;
-        $page = $_SESSION["page"];
         if(isset($_POST["note"]))
         {
             //呼叫方法
             $call_article = $this->model("articleMethod");
-            $return_article = $call_article->ModifyArticle($username,$area,$title,$sort,$address,$content,$page);
+            $return_article = $call_article->ModifyArticle($username,$area,$title,$sort,$address,$content);
             $this->view("echo_json",$return_article);
         }
    } 
@@ -145,10 +142,9 @@ class HomeController extends Controller {
    //即時聊天//
    function chat(){
         $get_rq = $_GET["rq"];
-        $user = $_SESSION["login"];
         //呼叫方法
         $call_chatMethod = $this->model("chatMethod");
-        $return_chatMethod = $call_chatMethod->getchatmessage($rq,$user);
+        $return_chatMethod = $call_chatMethod->getchatmessage($rq);
         
         $this->view("echo_json",$return_chatMethod);
    }
