@@ -27,7 +27,7 @@
                         			console.log(data)
                         			if(data["status"] == 0){
                         				console.log(data);
-                        				$("#ResponseDiv").append('<div>'+'['+data["time"]+']'+data["username"]+':'+data["msg"]+'</div>')
+                        				$("#ResponseDiv").append('<div>'+data["username"]+':'+data["msg"]+'{'+data["time"]+'}'+'</div>')
                         				$('#ResponseDiv').scrollTop ($('#ResponseDiv').height());
                         			}
                         			else{

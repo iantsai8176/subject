@@ -1,6 +1,8 @@
 <?php
 class caculation{
-    function page($db){
+    function page(){
+        $PDO = new PDOsql();
+        $db = $PDO->getConnection();
         $sql ="SELECT * from article order by no desc";
         $result = $db->query($sql);
         

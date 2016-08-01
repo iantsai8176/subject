@@ -231,7 +231,7 @@ session_start();
                     		$sql = "select * from (select * from message order by no desc limit 10) as data order by no asc";
                     		$result = $data["db"]->query($sql);
                     		while($row =$result->fetch()){
-                    		    echo "<div>[".$row["time"].']'.$row['username'].":".$row['msg']."</div>";
+                    		    echo "<div>".$row['username'].":".$row['msg'].'{'.$row["time"].'}'."</div>";
                     		    echo "<script>$('#ResponseDiv').scrollTop($('#ResponseDiv').height());</script>";
                     		}
                     		
