@@ -40,8 +40,8 @@
             
             <label class="bringok" style="display:none">攜伴</label>
             <input type="radio" name="bring" value="Yes"  class="bringok" style="display:none"/><span class="bringok" style="display:none">是</span>
-            <input type="radio" name="bring" value="No"  class="bringok" style="display:none"/><span class="bringok" style="display:none">否</span>
-            <input type="text" name="num" size="1px" class="radio" style="display:none"/>
+            <input type="radio" name="bring" value="No"  class="bringok" style="display:none" checked="true"/><span class="bringok" style="display:none">否</span>
+            <input type="number" name="num" size="1px" class="radio" style="display:none"/>
             <label for="num" class="radio" style="display:none">人</label>
             
             <input type="hidden" name = "actid" id="actid" value=" <?= $_GET['id']?>" >
@@ -69,17 +69,17 @@
                 
                $("#btnok").click(function(){
                    if($("#Eid").val() == ""){
-                    $(".error1").text("未填").css("color","red");
-                    eval("document.add['Eid'].focus()");
-                }
-                else if($("#Ename").val() == ""){
-                    $(".error2").text("未填").css("color","red");
-                    eval("document.add['Ename'].focus()");
-                }
-            else{
-                document.add.submit();
-               }
-            })
+                        $(".error1").text("未填").css("color","red");
+                        eval("document.add['Eid'].focus()");
+                    }
+                    else if($("#Ename").val() == ""){
+                        $(".error2").text("未填").css("color","red");
+                        eval("document.add['Ename'].focus()");
+                    }
+                    else{
+                        document.add.submit();
+                    }
+                })
             })
         </script>
         
