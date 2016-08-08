@@ -21,7 +21,7 @@
                                 <td  align="center"><?php echo $value["CurrentNumber"] ?></td>
                                 <td  align="center"><?php echo $value["StartDate"] ?></td>
                                 <td  align="center"><?php echo $value["EndDate"] ?></td>
-                                <td  align="center"><a href="https://plc-kmygrock666.c9users.io/ActivityMVC/Front/showjoin?id=<?php echo $value["no"] ?>">網址</a></td>
+                                <td  align="center"><a href="https://plc-kmygrock666.c9users.io/Object/ActivityMVC/Front/showjoin?id=<?php echo $value["no"] ?>">網址</a></td>
                             </tr>
                             
                             <?php } ?>

@@ -7,11 +7,7 @@
      
     <body>
        
-<<<<<<< HEAD
         <div style=" width:100%">
-=======
-        <div style=" width:100% ; ">
->>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
              <div style="border-width:3px 6px 7px;border-style:solid;border-color:#CFCFCF;padding:5px; width: 30% ; margin :auto">
         
         <form name = "add" align="center" method="post" action="addemployee">

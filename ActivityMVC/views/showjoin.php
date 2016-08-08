@@ -6,46 +6,25 @@
     <body>
         
         <div style="margin: auto;width:30%;padding:5px">
-<<<<<<< HEAD
         <center><input type="button" style="width:120px;height:40px;font-size:5px;" onclick=location.href="../Back" value="後台"></center> 
-=======
-        <center><input type="button" style="width:120px;height:40px;font-size:5px;" onclick=location.href="showjoin" value="前台"></button>
-        <input type="button" style="width:120px;height:40px;font-size:5px;" onclick=location.href="../Back" value="後台"></center> 
->>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
         </div>
 
         
         <div style=" width:100% ">
              <div style="border-width:3px 6px 7px;border-style:solid;border-color:#CFCFCF;padding:5px; width: 30% ; margin :auto;margin-bottom:10px">
-<<<<<<< HEAD
                      
-=======
-                    
->>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
                      <label for="">活動名稱：<?php echo $data["ActivityName"]?></label><br>
                      <label for="">報名人數：<?php echo $data["LimitNumber"]?></label><br>
                      <label for="">起始日期：<?php echo $data["StartDate"]?></label><br>
                      <label for="">截止日期：<?php echo $data["EndDate"]?></label><br>
-<<<<<<< HEAD
                      <label>剩餘報名人數：</label><span id ="current"></span><br>
-=======
-                     <label for="">目前報名人數：</label><br>
->>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
                      
             </div>
              <div style="border-width:3px 6px 7px;border-style:solid;border-color:#CFCFCF;padding:5px; width: 30% ; margin :auto">
                  
-<<<<<<< HEAD
         <form name = "add"  method="post" action="particpate" >
             <h3 align="center">報名資料填寫</h3>
             <div style=" margin :auto;width:70%">
-=======
-                
-        
-        <form name = "add"  method="post" action="particpate" >
-            <h3 align="center">報名資料填寫</h3>
-            <div style=" margin :auto;width:60%">
->>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
                 
             <label for="">編號</label>
             <input type="text" name="Eid" id="Eid"/>
@@ -98,7 +77,6 @@
                         document.add.submit();
                     }
                 })
-<<<<<<< HEAD
                 number();
                 setInterval(number,5000);
                 
@@ -116,8 +94,6 @@
                 //     $("#current").text(data);
                 // })
                 }
-=======
->>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
             })
         </script>
         
