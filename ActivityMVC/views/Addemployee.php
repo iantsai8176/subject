@@ -7,7 +7,11 @@
      
     <body>
        
+<<<<<<< HEAD
+        <div style=" width:100%">
+=======
         <div style=" width:100% ; ">
+>>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
              <div style="border-width:3px 6px 7px;border-style:solid;border-color:#CFCFCF;padding:5px; width: 30% ; margin :auto">
         
         <form name = "add" align="center" method="post" action="addemployee">
@@ -33,12 +37,47 @@
             
             </div>
         </form>
+<<<<<<< HEAD
+        <!--讓超出文字強制斷行-->
+        <style>
+            #wrap{
+                word-wrap: break-word; 
+                word-break: normal; 
+                }
+        </style>
+        
+        
+            <div id="wrap">
+                <?php 
+                $id = $_GET["id"];
+                
+                $url = "https://plc-kmygrock666.c9users.io/ActivityMVC/Front/showjoin?id=$id";
+                ?>
+                <label>報名網址：</label><br>
+                <a href="<?php echo $url?>"><?php echo $url?></a>
+            </div>
+=======
+>>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
         </div>
         </div>
         <script>
     $(document).ready(function(){
         $("#btnok").click(function(){
             
+<<<<<<< HEAD
+            if($("#Eid").val() == ""){
+                $(".error1").text("未填").css("color","red");
+                eval("document.add['Eid'].focus()");
+            }
+            else if($("#Ename").val() == ""){
+                $(".error2").text("未填").css("color","red");
+                eval("document.add['Ename'].focus()");
+            }
+            else{
+                $.get("addemployee?"+"Eid="+$('#Eid').val()+"&Ename="+$('#Ename').val()+"&actid="+$('#actid').val(),
+                    function(data){
+                        // console.log(data);
+=======
                 if($("#Eid").val() == ""){
                     $(".error1").text("未填").css("color","red");
                     eval("document.add['Eid'].focus()");
@@ -52,11 +91,16 @@
                 $.get("addemployee?"+"Eid="+$('#Eid').val()+"&Ename="+$('#Ename').val()+"&actid="+$('#actid').val(),
                     function(data){
                         console.log(data);
+>>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
                         var result = JSON.parse(data);
                         $("#list").append("<tr><td>"+result['id']+"</td><td>"+result['name']+"</td></tr>");
                         $("#Eid").val("");
                         $("#Ename").val("");
+<<<<<<< HEAD
+                        //  $("#joinurl").val(result["url"]);
+=======
                         
+>>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
                     })
             }
              

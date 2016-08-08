@@ -10,12 +10,35 @@ class Showinfo{
             $db_catch->execute();
             $row = $db_catch->fetch();
             $array = $row;
+<<<<<<< HEAD
+            if(!$array){throw new Exception("查無此活動");}
+            //判斷報名時間是否開始
+            $datetime = date ("Y-m-d H:i:s" , mktime(date('H')+8, date('i'), date('s'), date('m'), date('d'), date('Y'))) ; 
+            if($row["EndDate"] < $datetime){return "報名已截止";}
+            if($row["StartDate"] > $datetime){return "報名時間未開始";}
+            
+=======
             if(!$row){throw new Exception("查無此活動");}
+>>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
             return $array;
         }catch(Exception $e){
             echo "Error: " . $e->getMessage();
         }
+<<<<<<< HEAD
+    }//顯示報名資訊
+    
+    function timely(){
+        $id = $_GET["rq"];
+            $PDO = new Opensql();
+            $db = $PDO->getConnection();
+            $db_catch = $db->prepare("SELECT * from CreateActivity WHERE no = $id");
+            $db_catch->execute();
+            $row = $db_catch->fetch();
+            return $row["CurrentNumber"];
+    }//及時報名人數
+=======
     }
+>>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
     
     function Join($Eid,$Ename,$Bring,$actid){
         $PDO = new Opensql();
@@ -76,7 +99,11 @@ class Showinfo{
             return  "<script>alert('".$err->getMessage()."')\nwindow.location.href='showjoin?id=$actid'</script>";
         }
         
+<<<<<<< HEAD
+    }//報名人數限制
+=======
         
     }
+>>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
 }
 ?>

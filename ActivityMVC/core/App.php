@@ -24,7 +24,11 @@ class App {
             $url = explode("/", $url);
             return $url;
         }else {
+<<<<<<< HEAD
+            header("Location:Back");
+=======
             header("Location:Front/showjoin");
+>>>>>>> 42546735d86a6adaa98c0e161e85de3254e5cdf1
         }
     }
     
