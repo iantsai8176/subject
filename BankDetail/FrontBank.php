@@ -1,3 +1,11 @@
+<?php
+require_once("opensql.php");
+$ob = new opensql();
+$db = $ob->getConnection();
+$db_search = $db->prepare("SELECT * from Detail");
+$db_search->execute();
+
+?>
 <html>
     <head>
         <meta charset="utf-8">
@@ -7,7 +15,14 @@
                 <table border = "1px" width="100%">
                     <TR><TH ROWSPAN=2>帳戶</TH><TH COLSPAN=2>明細</TH><TH ROWSPAN=2>餘額</TH></TR>
                     <TR><TH>轉入</TH><TH>轉出</TH></TR>
-                    <tr align="center"><td>123</td><td>321</td><td>456</td><td>789</td></tr>
+                    <?php while($row = $db_search->fetch()) { ?>
+                    <tr align="center">
+                        <td><?php echo $row["Account"] ?></td>
+                        <td><?php echo $row["save"] ?></td>
+                        <td><?php echo $row["withdraw"] ?></td>
+                        <td><?php echo $row["overage"] ?></td>
+                    </tr>
+                    <?php } ?>
                 </table>
             </div>
             

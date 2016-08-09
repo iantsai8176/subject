@@ -4,23 +4,24 @@
         <script type="text/javascript" src="js/jquery.js"></script>
         <body>
             <div  style="border-width:3px 6px 7px;border-style:solid;border-color:#CFCFCF;padding:5px; width: 20% ; margin :auto">
-                
+                <h3 align="center">Bank</h3>
                 <input type="button" id="SAVE" value="存款"/>
                 <input type="button" id="WITHDRAW" value="提款"/>
                 
-                <form id="saveform" method="post" action = "operate.php" style="display:none">
+                <form id="saveform" method="post" action = "operate.php" style="display:none;margin-top:5px">
                     
                     <input type="text" name="SaveAmount" placeholder="預存款金額"/>
                     <input type="submit" name="" value="存款"/>
                     <br>
                 </form>
                 
-                <form id="withdrawform" method="post" action = "operate.php" style="display:none">
+                <form id="withdrawform" method="post" action = "operate.php" style="display:none;margin-top:5px">
                     
                     <input type="text" name="WithdrawAmount" placeholder="預提款金額"/>
                     <input type="submit" name="" value="提款"/>
                     <br>
                 </form>
+                <hr>
                 <input type="button" name="" value="明細" onClick="location.href='FrontBank.php'" />
             </div>
             
