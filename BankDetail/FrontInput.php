@@ -1,3 +1,23 @@
+<?php
+
+require_once("operate.php");
+
+if (isset($_POST["SaveAmount"])) {
+     $input = $_POST["SaveAmount"];
+     $ob = new Operate();
+     $callOperation = $ob->operation(0, $input);
+     echo $call;
+
+}
+
+if (isset($_POST["WithdrawAmount"])) {
+     $input = $_POST["WithdrawAmount"];
+     $ob = new Operate();
+     $callOperation = $ob->operation($input, 0);
+     echo $call."222";
+}
+
+?>
 <html>
     <head>
         <meta charset="utf-8">
@@ -7,16 +27,12 @@
                 <h3 align="center">Bank</h3>
                 <input type="button" id="SAVE" value="存款"/>
                 <input type="button" id="WITHDRAW" value="提款"/>
-                
-                <form id="saveform" method="post" action = "operate.php" style="display:none;margin-top:5px">
-                    
+                <form id="saveform" method="post" action = "FrontInput.php" style="display:none;margin-top:5px">
                     <input type="text" name="SaveAmount" placeholder="預存款金額"/>
                     <input type="submit" name="" value="存款"/>
                     <br>
                 </form>
-                
-                <form id="withdrawform" method="post" action = "operate.php" style="display:none;margin-top:5px">
-                    
+                <form id="withdrawform" method="post" action = "FrontInput.php" style="display:none;margin-top:5px">
                     <input type="text" name="WithdrawAmount" placeholder="預提款金額"/>
                     <input type="submit" name="" value="提款"/>
                     <br>
@@ -24,11 +40,8 @@
                 <hr>
                 <input type="button" name="" value="明細" onClick="location.href='FrontBank.php'" />
             </div>
-            
             <div style="border-width:3px 6px 7px;width: 40% ; margin :auto;margin-top:5px">
-               
             </div>
-            
             <script>
                 $(document).ready(function(){
                     $("#SAVE").click(function(){
