@@ -24,35 +24,34 @@ class Operate  {
         $db = $this->sql();
         try{
             $db->beginTransaction();
-            $search = $db->prepare("SELECT * from Detail ORDER BY  no DESC limit 1");
-            $search->execute();
-            $result_search = $search->fetch();
-            if (!$result_search) {
+            $lock = $db->prepare("SELECT * FROM ` Balance` WHERE 1 FOR UPDATE");
+            $lock->execute();
+            $lock_result = $lock->fetch();
+            if (!$lock_result) {
                 throw new Exception("查無此帳號");
             }
 
-            sleep(3);
-            if ($Wnum != 0) {
-                if ($result_search["overage"] > $Wnum ) {
-                    $total = $result_search["overage"] - $Wnum;
-                    $sql = "INSERT INTO `Detail` (`Account`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai',:snum,:wnum,:total)";
-                    $WithDraw = $db->prepare($sql);
-                    $WithDraw->bindParam(":snum", $Snum, PDO::PARAM_INT,50);
-                    $WithDraw->bindParam(":wnum", $Wnum, PDO::PARAM_INT,50);
-                    $WithDraw->bindParam(":total", $total, PDO::PARAM_INT,50);
-                    $result_WithDraw = $WithDraw->execute();
-                    if (!$result_WithDraw) {
-                        throw new Exception("提領失敗");
-                    }
-
+            sleep(5);
+            if($Wnum != 0){
+                if ($lock_result["overage"] >= $Wnum ) {
+                    $total = $lock_result["overage"] - $Wnum;
+                    $update =$db->prepare("UPDATE ` Balance` SET `overage`= :total WHERE 1");
+                    $update->bindParam(":total", $total, PDO::PARAM_INT,50);
+                    $update->execute();
                 } else {
                     throw new Exception("餘額不足");
                 }
-
+            } elseif ($Snum != 0) {
+                $total = $total = $lock_result["overage"] + $Snum;
+                $update =$db->prepare("UPDATE ` Balance` SET `overage`= :total WHERE 1");
+                $update->bindParam(":total", $total, PDO::PARAM_INT,50);
+                $update->execute();
             }
 
+            $db->commit();
+            echo "<script>alert('操作成功')\nwindow.location.href='FrontInput.php'</script></script>";
             if ($Snum != 0) {
-                    $total = $result_search["overage"] + $Snum;
+                    $total = $lock_result["overage"] + $Snum;
                     $sql = "INSERT INTO `Detail` (`Account`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai',:snum,:wnum,:total)";
                     $SAVE = $db->prepare($sql);
                     $SAVE->bindParam(":snum",$Snum,PDO::PARAM_INT,50);
@@ -62,11 +61,21 @@ class Operate  {
                     if (!$result_SAVE) {
                         throw new Exception("存款失敗");
                     }
-
             }
 
-            $db->commit();
-            echo "<script>alert('操作成功')\nwindow.location.href='FrontInput.php'</script></script>";
+            if ($Wnum != 0) {
+                    $total = $lock_result["overage"] - $Wnum;
+                    $sql = "INSERT INTO `Detail` (`Account`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai',:snum,:wnum,:total)";
+                    $WithDraw = $db->prepare($sql);
+                    $WithDraw->bindParam(":snum", $Snum, PDO::PARAM_INT,50);
+                    $WithDraw->bindParam(":wnum", $Wnum, PDO::PARAM_INT,50);
+                    $WithDraw->bindParam(":total", $total, PDO::PARAM_INT,50);
+                    $result_WithDraw = $WithDraw->execute();
+                    if (!$result_WithDraw) {
+                        throw new Exception("提領失敗");
+                    }
+            }
+
         }
         catch (Exception $e) {
             $db->rollback();
