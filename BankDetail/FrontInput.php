@@ -6,7 +6,7 @@ if (isset($_POST["SaveAmount"])) {
      $input = $_POST["SaveAmount"];
      $ob = new Operate();
      $callOperation = $ob->operation(0, $input);
-     echo $call;
+     echo $callOperation;
 
 }
 
@@ -14,7 +14,7 @@ if (isset($_POST["WithdrawAmount"])) {
      $input = $_POST["WithdrawAmount"];
      $ob = new Operate();
      $callOperation = $ob->operation($input, 0);
-     echo $call."222";
+     echo $callOperation;
 }
 
 ?>
@@ -38,7 +38,7 @@ if (isset($_POST["WithdrawAmount"])) {
                     <br>
                 </form>
                 <hr>
-                <input type="button" name="" value="明細" onClick="location.href='FrontBank.php'" />
+                <input type="button" aling="center" value="查看明細" onClick="location.href='FrontBank.php'" />
             </div>
             <div style="border-width:3px 6px 7px;width: 40% ; margin :auto;margin-top:5px">
             </div>

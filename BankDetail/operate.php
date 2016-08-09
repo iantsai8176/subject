@@ -2,6 +2,9 @@
 
 require_once("opensql.php");
 
+date_default_timezone_set("Asia/Taipei");
+
+
 class Operate
 {
 
@@ -17,6 +20,7 @@ class Operate
     function operation($withDraw, $save)
     {
         $db = $this->connect();
+        $datetime = date("Y-m-d H:i:s");
         try{
             $db->beginTransaction();
             $lockRow = $db->prepare("SELECT * FROM ` Balance` WHERE no = 1 FOR UPDATE");
@@ -48,33 +52,33 @@ class Operate
 
             //將資料存入資料庫
             if ($save != 0) {
-                    $total = $lockRowResult["overage"] + $save;
-                    $sql = "INSERT INTO `Detail` (`Account`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai',:snum,:wnum,:total)";
-                    $saveDetail = $db->prepare($sql);
-                    $saveDetail->bindParam(":snum",$save);
-                    $saveDetail->bindParam(":wnum",$withDraw);
-                    $saveDetail->bindParam(":total",$total);
-                    $resultSaveDetail = $saveDetail->execute();
-                    if (! $resultSaveDetail) {
-                        throw new Exception("存款失敗");
-                    }
+                $total = $lockRowResult["overage"] + $save;
+                $sql = "INSERT INTO `Detail` (`Account`,`time`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai','$datetime',:snum,:wnum,:total)";
+                $saveDetail = $db->prepare($sql);
+                $saveDetail->bindParam(":snum",$save);
+                $saveDetail->bindParam(":wnum",$withDraw);
+                $saveDetail->bindParam(":total",$total);
+                $resultSaveDetail = $saveDetail->execute();
+                if (! $resultSaveDetail) {
+                    throw new Exception("存款失敗");
+                }
             }
 
             if ($withDraw != 0) {
-                    $total = $lockRowResult["overage"] - $withDraw;
-                    $sql = "INSERT INTO `Detail` (`Account`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai',:snum,:wnum,:total)";
-                    $withDrawDetail = $db->prepare($sql);
-                    $withDrawDetail->bindParam(":snum", $save);
-                    $withDrawDetail->bindParam(":wnum", $withDraw);
-                    $withDrawDetail->bindParam(":total", $total);
-                    $withDrawDetailResult = $withDrawDetail->execute();
-                    if (! $withDrawDetailResult) {
-                        throw new Exception("提領失敗");
-                    }
+                $total = $lockRowResult["overage"] - $withDraw;
+                $sql = "INSERT INTO `Detail` (`Account`,`time`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai','$datetime',:snum,:wnum,:total)";
+                $withDrawDetail = $db->prepare($sql);
+                $withDrawDetail->bindParam(":snum", $save);
+                $withDrawDetail->bindParam(":wnum", $withDraw);
+                $withDrawDetail->bindParam(":total", $total);
+                $withDrawDetailResult = $withDrawDetail->execute();
+                if (! $withDrawDetailResult) {
+                    throw new Exception("提領失敗");
+                }
 
             }
 
-            return "<script>alert('操作成功')\nwindow.location.href='FrontInput.php'</script></script>";
+            return "<script>alert('操作成功')\nwindow.location.href='FrontInput.php'</script>";
 
         }
         catch (Exception $e) {
