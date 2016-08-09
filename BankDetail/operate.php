@@ -7,11 +7,13 @@ if (isset($_POST["SaveAmount"])) {
      $call = $ob->operation(0,$input);
      
 }
+
 if (isset($_POST["WithdrawAmount"])) {
      $input = $_POST["WithdrawAmount"];
      $ob = new Operate();
      $call = $ob->operation($input,0);
 }
+
 class Operate  {
 
     function sql(){
@@ -31,7 +33,8 @@ class Operate  {
                 throw new Exception("查無此帳號");
             }
 
-            sleep(5);
+            sleep(3);
+            //判斷是存款或提款
             if($Wnum != 0){
                 if ($lock_result["overage"] >= $Wnum ) {
                     $total = $lock_result["overage"] - $Wnum;
@@ -50,6 +53,7 @@ class Operate  {
 
             $db->commit();
             echo "<script>alert('操作成功')\nwindow.location.href='FrontInput.php'</script></script>";
+            //將資料存入資料庫
             if ($Snum != 0) {
                     $total = $lock_result["overage"] + $Snum;
                     $sql = "INSERT INTO `Detail` (`Account`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai',:snum,:wnum,:total)";
@@ -58,7 +62,7 @@ class Operate  {
                     $SAVE->bindParam(":wnum",$Wnum,PDO::PARAM_INT,50);
                     $SAVE->bindParam(":total",$total,PDO::PARAM_INT,50);
                     $result_SAVE = $SAVE->execute();
-                    if (!$result_SAVE) {
+                    if (! $result_SAVE) {
                         throw new Exception("存款失敗");
                     }
             }
@@ -71,7 +75,7 @@ class Operate  {
                     $WithDraw->bindParam(":wnum", $Wnum, PDO::PARAM_INT,50);
                     $WithDraw->bindParam(":total", $total, PDO::PARAM_INT,50);
                     $result_WithDraw = $WithDraw->execute();
-                    if (!$result_WithDraw) {
+                    if (! $result_WithDraw) {
                         throw new Exception("提領失敗");
                     }
             }
