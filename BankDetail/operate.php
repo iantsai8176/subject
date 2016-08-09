@@ -32,7 +32,7 @@ class Operate  {
             }
 
             sleep(3);
-            if ($wnum != 0) {
+            if ($Wnum != 0) {
                 if ($result_search["overage"] > $Wnum ) {
                     $total = $result_search["overage"] - $Wnum;
                     $sql = "INSERT INTO `Detail` (`Account`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai',:snum,:wnum,:total)";
@@ -41,13 +41,17 @@ class Operate  {
                     $WithDraw->bindParam(":wnum", $Wnum, PDO::PARAM_INT,50);
                     $WithDraw->bindParam(":total", $total, PDO::PARAM_INT,50);
                     $result_WithDraw = $WithDraw->execute();
-                    if (!$result_insert) {
+                    if (!$result_WithDraw) {
                         throw new Exception("提領失敗");
                     }
 
+                } else {
+                    throw new Exception("餘額不足");
                 }
 
-            } elseif ($Snum != 0) {
+            }
+
+            if ($Snum != 0) {
                     $total = $result_search["overage"] + $Snum;
                     $sql = "INSERT INTO `Detail` (`Account`,`save`,`withdraw`,`overage`) VALUES ('ian_Tsai',:snum,:wnum,:total)";
                     $SAVE = $db->prepare($sql);
@@ -66,7 +70,7 @@ class Operate  {
         }
         catch (Exception $e) {
             $db->rollback();
-            echo $e->getMessage();
+            echo "<script>alert('".$e->getMessage()."')\nwindow.location.href='FrontInput.php'</script>";
         }
     }
 }
