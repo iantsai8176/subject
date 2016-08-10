@@ -49,7 +49,6 @@ class Operate
             }
 
             $db->commit();
-
             //將資料存入資料庫
             if ($save != 0) {
                 $total = $lockRowResult["overage"] + $save;
@@ -78,13 +77,14 @@ class Operate
 
             }
 
-            return "<script>alert('操作成功')\nwindow.location.href='FrontInput.php'</script>";
+           // return "<script>alert('操作成功')\nwindow.location.href='index.php'</script>";
+           return true;
 
         }
         catch (Exception $e) {
             $db->rollback();
 
-            return "<script>alert('".$e->getMessage()."')\nwindow.location.href='FrontInput.php'</script>";
+            return "<script>alert('".$e->getMessage()."')\nwindow.location.href='index.php'</script>";
 
         }
     }
