@@ -34,7 +34,7 @@ $dbSearch->execute();
                         <td><?php echo $row["time"] ?></td>
                         <td><?php echo $row["save"] ?></td>
                         <td><?php echo $row["withdraw"] ?></td>
-                        <td><?php echo $row["overage"] ?></td>
+                        <td><?php echo $row["overAge"] ?></td>
                     </tr>
                     <?php } ?>
                 </table>

@@ -3,10 +3,10 @@ class Opensql{
     public static $connect = null;
     function __construct()
     {
+        //資料庫連線
         $dbHost = "mysql:host=localhost;dbname=Bank;port=443";
         $dbUser = 'root';
     	$dbPass = '';
-    	//資料庫連線
     	self::$connect = new PDO($dbHost,$dbUser,$dbPass);
     	self::$connect->exec("set names utf8");
     }

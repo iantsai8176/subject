@@ -14,13 +14,14 @@ class Operate
         return $getConnect;
     }
 
-    function operation($withDraw, $save)
+    function operation($amount, $user, $dealAction)
     {
         $db = $this->connect();
         $dateTime = date("Y-m-d H:i:s");
         try {
             $db->beginTransaction();
-            $lockRow = $db->prepare("SELECT * FROM `Balance` WHERE no = 1 FOR UPDATE");
+            $lockRow = $db->prepare("SELECT * FROM `balance` WHERE `account` = :user FOR UPDATE");
+            $lockRow->bindParam(":user",$user);
             $lockRow->execute();
             $lockRowResult = $lockRow->fetch();
 
@@ -28,60 +29,58 @@ class Operate
                 throw new Exception("查無此帳號");
             }
 
-            //判斷是存款或提款
-            if($withDraw != 0){
-                if ($lockRowResult["overage"] >= $withDraw ) {
-                    $updateWithDraw =$db->prepare("UPDATE ` Balance` SET `overAge`= overAge - :withDraw WHERE no = 1");
-                    $updateWithDraw->bindParam(":withDraw", $withDraw);
+            //判斷是否為存款或提款
+            if ($dealAction == "WithDrawAmount") {
+                if ($lockRowResult["overAge"] >= $amount ) {
+                    $updateWithDraw =$db->prepare("UPDATE `balance` SET `overAge`= overAge - :withDraw WHERE `account` = :user");
+                    $updateWithDraw->bindParam(":withDraw", $amount);
+                    $updateWithDraw->bindParam(":user", $user);
                     $updateWithDraw->execute();
 
-                    $total = $lockRowResult["overage"] + $save;
-                    $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES ('ian_Tsai','$datetime',:snum,:wnum,:total)";
-                    $saveDetail = $db->prepare($sql);
-                    $saveDetail->bindParam(":snum",$save);
-                    $saveDetail->bindParam(":wnum",$withDraw);
-                    $saveDetail->bindParam(":total",$total);
+                    //新增提款紀錄
+                    $total = $lockRowResult["overAge"] - $amount;
+                    $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES (:user,'$dateTime',0,:withDraw,:total)";
+                    $withDrawDetail = $db->prepare($sql);
+                    $withDrawDetail->bindParam(":user", $user);
+                    $withDrawDetail->bindParam(":withDraw", $amount);
+                    $withDrawDetail->bindParam(":total", $total);
+                    $withDrawDetailResult = $withDrawDetail->execute();
+
+                    if (!$withDrawDetailResult) {
+                        throw new Exception("提領失敗");
+                    }
 
                 } else {
                     throw new Exception("餘額不足");
                 }
-            } elseif ($save != 0) {
-                $updateSave =$db->prepare("UPDATE `Balance` SET `overAge`= overAge + :save WHERE no = 1");
-                $updateSave->bindParam(":save", $save);
-                $updateSave->execute();
-            }
+            } elseif ($dealAction == "SaveAmount") {
+                $updateSave =$db->prepare("UPDATE `balance` SET `overAge`= overAge + :save WHERE account = :user");
+                $updateSave->bindParam(":save", $amount);
+                $updateSave->bindParam(":user", $user);
+                $result=$updateSave->execute();
 
-            $db->commit();
-            //將資料存入資料庫
-            if ($save != 0) {
+                //新增存款紀錄
+                $total = $lockRowResult["overAge"] + $amount;
+                $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES (:user,'$dateTime',:save,0,:total)";
+                $saveDetail = $db->prepare($sql);
+                $saveDetail->bindParam(":user", $user);
+                $saveDetail->bindParam(":save", $amount);
+                $saveDetail->bindParam(":total", $total);
+                $saveDetailResult = $saveDetail->execute();
 
-
-
-                $resultSaveDetail = $saveDetail->execute();
-                if (! $resultSaveDetail) {
+                if (! $saveDetailResult) {
                     throw new Exception("存款失敗");
                 }
-            }
-
-            if ($withDraw != 0) {
-                $total = $lockRowResult["overage"] - $withDraw;
-                $sql = "INSERT INTO `detail` (`Account`,`time`,`save`,`withdraw`,`overAge`) VALUES ('ian_Tsai','$datetime',:snum,:wnum,:total)";
-                $withDrawDetail = $db->prepare($sql);
-                $withDrawDetail->bindParam(":snum", $save);
-                $withDrawDetail->bindParam(":wnum", $withDraw);
-                $withDrawDetail->bindParam(":total", $total);
-                $withDrawDetailResult = $withDrawDetail->execute();
-                if (! $withDrawDetailResult) {
-                    throw new Exception("提領失敗");
-                }
 
             }
+            $db->commit();
 
-           return true;
+            return true;
         }catch (Exception $e) {
             $db->rollback();
 
-            return $e->getMessage();
+            echo "<script>alert('".$e->getMessage()."')</script>";
+            return false;
         }
     }
 }
