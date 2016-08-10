@@ -5,6 +5,7 @@ require_once("operate.php");
 if (($_POST["SaveAmount"]) != "") {
      $input = $_POST["SaveAmount"];
      $user = $_POST["user"];
+     setcookie("user",$user);
      $dealAction = "SaveAmount";
      $ob = new Operate();
      $callOperation = $ob->operation($input, $user, $dealAction);
@@ -15,6 +16,7 @@ if (($_POST["WithDrawAmount"]) != "") {
      $withDraw = $_POST["WithDrawAmount"];
      $input = $withDraw;
      $user = $_POST["user"];
+     setcookie("user",$user);
      $dealAction = "WithDrawAmount";
      $ob = new Operate();
      $callOperation = $ob->operation($input, $user, $dealAction);
@@ -29,7 +31,9 @@ if (($_POST["WithDrawAmount"]) != "") {
         <body>
             <div align="center" style="border-width:3px 6px 7px;border-style:solid;border-color:#CFCFCF;padding:5px; width: 20% ; margin :auto">
                 <h3 align="center">Bank</h3>
-                <form method="post" action = "index.php">
+                <input type="button" id="deal" value="交易"/>
+                <input type="button" id="detail" value="查餘額"/>
+                <form id="dealform" method="post" action = "index.php" style="display:none;margin-top:5px">
                     <label for="">請輸入帳號</label>
                     <input type="text" name="user"/><br>
                     <hr>
@@ -37,9 +41,14 @@ if (($_POST["WithDrawAmount"]) != "") {
                     <input type="button" id="WITHDRAW" value="提款"/>
                     <input type="text"  class="SaveAmount" name="SaveAmount" placeholder="預存款金額" style="display:none;margin-top:5px"/>
                     <input type="text" class="WithDrawAmount" name="WithDrawAmount" placeholder="預提款金額" style="display:none;margin-top:5px"/>
-                    <input type="submit" class="SaveAmount" id="btnok" value="存款" style="display:none;margin-top:5px"/>
-                    <input type="submit" class="WithDrawAmount" id="btnok" value="提款" style="display:none;margin-top:5px"/>
+                    <input type="submit" class="SaveAmount" id="btnok" value="存款確認" style="display:none;margin-top:5px"/>
+                    <input type="submit" class="WithDrawAmount" id="btnok" value="提款確認" style="display:none;margin-top:5px"/>
                     <br>
+                </form>
+                <form id = "detailform" method="post" action="FrontBank.php" style="display:none;margin-top:5px">
+                    <label for="">請輸入帳號</label>
+                    <input type="text" name="user"/><br>
+                    <input type="submit" name="" value="查看明細"/>
                 </form>
                 <hr>
                 <span id = "msg" >
@@ -50,12 +59,21 @@ if (($_POST["WithDrawAmount"]) != "") {
 
                 ?>
                 </span>
-                <input type="button" value="查看明細" id="detail" onClick="location.href='FrontBank.php?user='"/><br>
             </div>
             <div style="border-width:3px 6px 7px;width: 40% ; margin :auto;margin-top:5px">
             </div>
             <script>
                 $(document).ready(function(){
+                    $("#deal").click(function() {
+                        $("#dealform").show();
+                        $("#detailform").hide();
+                    })
+                    $("#detail").click(function() {
+                        $("#detailform").show();
+                        $("#dealform").hide();
+                        $("#msg").text("");
+                    })
+
                     $("#SAVE").click(function(){
                         $(".SaveAmount").show();
                         $(".WithDrawAmount").hide();

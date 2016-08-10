@@ -21,7 +21,7 @@ class Operate
         try {
             $db->beginTransaction();
             $lockRow = $db->prepare("SELECT * FROM `balance` WHERE `account` = :user FOR UPDATE");
-            $lockRow->bindParam(":user",$user);
+            $lockRow->bindParam(":user", $user);
             $lockRow->execute();
             $lockRowResult = $lockRow->fetch();
 
@@ -39,7 +39,7 @@ class Operate
 
                     //新增提款紀錄
                     $total = $lockRowResult["overAge"] - $amount;
-                    $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES (:user,'$dateTime',0,:withDraw,:total)";
+                    $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES (:user, '$dateTime', 0, :withDraw, :total)";
                     $withDrawDetail = $db->prepare($sql);
                     $withDrawDetail->bindParam(":user", $user);
                     $withDrawDetail->bindParam(":withDraw", $amount);
@@ -61,7 +61,7 @@ class Operate
 
                 //新增存款紀錄
                 $total = $lockRowResult["overAge"] + $amount;
-                $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES (:user,'$dateTime',:save,0,:total)";
+                $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES (:user,'$dateTime', :save, 0, :total)";
                 $saveDetail = $db->prepare($sql);
                 $saveDetail->bindParam(":user", $user);
                 $saveDetail->bindParam(":save", $amount);

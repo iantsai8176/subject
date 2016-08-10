@@ -4,7 +4,9 @@ require_once("openSql.php");
 
 $ob = new opensql();
 $db = $ob->getConnection();
-$dbSearch = $db->prepare("SELECT * from detail");
+$user = $_POST["user"];
+$dbSearch = $db->prepare("SELECT * FROM `detail` WHERE `account` = :user");
+$dbSearch->bindParam(":user", $user);
 $dbSearch->execute();
 ?>
 <style>
