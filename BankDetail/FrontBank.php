@@ -1,17 +1,29 @@
 <?php
 
-require_once("opensql.php");
+require_once("openSql.php");
 
 $ob = new opensql();
 $db = $ob->getConnection();
-$dbSearch = $db->prepare("SELECT * from Detail");
+$dbSearch = $db->prepare("SELECT * from detail");
 $dbSearch->execute();
 ?>
+<style>
+    .color
+    {   border-width:3px 6px 7px;
+        border-style:solid;
+        border-color:#CFCFCF;
+        padding:5px;
+        width: 60%;
+        height: 90%;
+        margin:auto;
+        overflow:auto;
+    }
+</style>
 <html>
     <head>
         <meta charset="utf-8">
         <body>
-            <div  style="border-width:3px 6px 7px;border-style:solid;border-color:#CFCFCF;padding:5px; width: 40% ; margin :auto">
+            <div align="center" class="color">
                 <span align="center"><h3>明細總表</h3></span>
                 <table border = "1px" width="100%">
                     <TR><TH ROWSPAN=2>帳戶</TH><TH COLSPAN=3>明細</TH><TH ROWSPAN=2>餘額</TH></TR>
@@ -26,6 +38,7 @@ $dbSearch->execute();
                     </tr>
                     <?php } ?>
                 </table>
+                <input type="button" value="回存提款頁" onClick="location.href='index.php'" /><br>
             </div>
         </body>
     </head>
