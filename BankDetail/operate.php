@@ -6,7 +6,7 @@ date_default_timezone_set("Asia/Taipei");
 
 class Operate
 {
-    function connect()
+    public function connect()
     {
         $pdo = new Opensql();
         $getConnect = $pdo->getConnection();
@@ -14,7 +14,7 @@ class Operate
         return $getConnect;
     }
 
-    function operation($amount, $user, $dealAction)
+    public function operation($amount, $user, $dealAction)
     {
         $db = $this->connect();
         $dateTime = date("Y-m-d H:i:s");
