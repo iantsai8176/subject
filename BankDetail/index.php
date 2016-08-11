@@ -3,9 +3,10 @@
 require_once("operate.php");
 
 if (($_POST["SaveAmount"]) != "") {
-     $input = $_POST["SaveAmount"];
+     $SaveAmount = $_POST["SaveAmount"];
+     $input = abs($SaveAmount);
      $user = $_POST["user"];
-     setcookie("user",$user);
+     setcookie("user", $user);
      $dealAction = "SaveAmount";
      $ob = new Operate();
      $callOperation = $ob->operation($input, $user, $dealAction);
@@ -14,9 +15,9 @@ if (($_POST["SaveAmount"]) != "") {
 
 if (($_POST["WithDrawAmount"]) != "") {
      $withDraw = $_POST["WithDrawAmount"];
-     $input = $withDraw;
+     $input = abs($withDraw);
      $user = $_POST["user"];
-     setcookie("user",$user);
+     setcookie("user", $user);
      $dealAction = "WithDrawAmount";
      $ob = new Operate();
      $callOperation = $ob->operation($input, $user, $dealAction);

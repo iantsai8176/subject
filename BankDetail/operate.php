@@ -39,7 +39,7 @@ class Operate
 
                     //新增提款紀錄
                     $total = $lockRowResult["overAge"] - $amount;
-                    $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES (:user, '$dateTime', 0, :withDraw, :total)";
+                    $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', 0, :withDraw, :total)";
                     $withDrawDetail = $db->prepare($sql);
                     $withDrawDetail->bindParam(":user", $user);
                     $withDrawDetail->bindParam(":withDraw", $amount);
@@ -61,7 +61,7 @@ class Operate
 
                 //新增存款紀錄
                 $total = $lockRowResult["overAge"] + $amount;
-                $sql = "INSERT INTO `detail` (`account`,`time`,`save`,`withdraw`,`overAge`) VALUES (:user,'$dateTime', :save, 0, :total)";
+                $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', :save, 0, :total)";
                 $saveDetail = $db->prepare($sql);
                 $saveDetail->bindParam(":user", $user);
                 $saveDetail->bindParam(":save", $amount);
@@ -78,8 +78,8 @@ class Operate
             return true;
         }catch (Exception $e) {
             $db->rollback();
-
             echo "<script>alert('".$e->getMessage()."')</script>";
+
             return false;
         }
     }
