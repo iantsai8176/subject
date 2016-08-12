@@ -1,8 +1,8 @@
 <?php
 
-require_once("openSql.php");
+require_once("OpenSql.php");
 
-$ob = new opensql();
+$ob = new Opensql();
 $db = $ob->getConnection();
 $user = $_POST["user"];
 $dbSearch = $db->prepare("SELECT * FROM `detail` WHERE `account` = :user");
@@ -40,7 +40,7 @@ $dbSearch->execute();
                     </tr>
                     <?php } ?>
                 </table>
-                <input type="button" value="回存提款頁" onClick="location.href='index.php'" /><br>
+                <input type="button" value="回存提款頁" onClick="location.href='Index.php'" /><br>
             </div>
         </body>
     </head>
