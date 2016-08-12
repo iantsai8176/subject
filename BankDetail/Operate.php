@@ -39,14 +39,14 @@ class Operate
 
             //判斷是否為存款或提款
             if ($dealAction == 'WithDrawAmount') {
-                if ($lockRowResult["overAge"] >= $amount ) {
+                if ($lockRowResult['overAge'] >= $amount ) {
                     $updateWithDraw =$db->prepare("UPDATE `balance` SET `overAge`= overAge - :withDraw WHERE `account` = :user");
                     $updateWithDraw->bindParam(":withDraw", $amount);
                     $updateWithDraw->bindParam(":user", $user);
                     $updateWithDraw->execute();
 
                     //新增提款紀錄
-                    $total = $lockRowResult["overAge"] - $amount;
+                    $total = $lockRowResult['overAge'] - $amount;
                     $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', 0, :withDraw, :total)";
                     $withDrawDetail = $db->prepare($sql);
                     $withDrawDetail->bindParam(":user", $user);
@@ -59,7 +59,7 @@ class Operate
                     }
                 }
 
-                if ($lockRowResult["overAge"] <= $amount) {
+                if ($lockRowResult['overAge'] <= $amount) {
                     throw new Exception('餘額不足');
                 }
             }
@@ -71,7 +71,7 @@ class Operate
                 $result=$updateSave->execute();
 
                 //新增存款紀錄
-                $total = $lockRowResult["overAge"] + $amount;
+                $total = $lockRowResult['overAge'] + $amount;
                 $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', :save, 0, :total)";
                 $saveDetail = $db->prepare($sql);
                 $saveDetail->bindParam(":user", $user);

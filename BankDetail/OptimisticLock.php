@@ -28,10 +28,11 @@ class Operate
         $dateTime = date("Y-m-d H:i:s");
         try {
             $db->beginTransaction();
-            $lockRow = $db->prepare("SELECT * FROM `balance` WHERE `account` = :user FOR UPDATE");
+            $lockRow = $db->prepare("SELECT * FROM `balance` WHERE `account` = :user");
             $lockRow->bindParam(":user", $user);
             $lockRow->execute();
             $lockRowResult = $lockRow->fetch();
+            $version = $lockRowResult['flage'];
 
             if (!$lockRowResult) {
                 throw new Exception('查無此帳號');
@@ -39,14 +40,19 @@ class Operate
 
             //判斷是否為存款或提款
             if ($dealAction == 'WithDrawAmount') {
-                if ($lockRowResult["overAge"] >= $amount ) {
-                    $updateWithDraw =$db->prepare("UPDATE `balance` SET `overAge`= overAge - :withDraw WHERE `account` = :user");
+                if ($lockRowResult['overAge'] >= $amount ) {
+                    $updateWithDraw =$db->prepare("UPDATE `balance` SET `overAge`= overAge - :withDraw, `flage` = flage + 1 WHERE `account` = :user AND `flage` = :flage");
                     $updateWithDraw->bindParam(":withDraw", $amount);
                     $updateWithDraw->bindParam(":user", $user);
-                    $updateWithDraw->execute();
+                    $updateWithDraw->bindParam(":flage", $version);
+                    $updateWithDrawResult = $updateWithDraw->execute();
+
+                    if (!$updateWithDrawResult) {
+                        throw new Exception('操作失敗，請重新操作');
+                    }
 
                     //新增提款紀錄
-                    $total = $lockRowResult["overAge"] - $amount;
+                    $total = $lockRowResult['overAge'] - $amount;
                     $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', 0, :withDraw, :total)";
                     $withDrawDetail = $db->prepare($sql);
                     $withDrawDetail->bindParam(":user", $user);
@@ -59,7 +65,7 @@ class Operate
                     }
                 }
 
-                if ($lockRowResult["overAge"] <= $amount) {
+                if ($lockRowResult['overAge'] < $amount) {
                     throw new Exception('餘額不足');
                 }
             }
