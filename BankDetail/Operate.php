@@ -8,7 +8,7 @@ class Operate
 {
     public function connect()
     {
-        $pdo = new Opensql();
+        $pdo = new OpenSql();
         $getConnect = $pdo->getConnection();
 
         return $getConnect;
@@ -16,7 +16,7 @@ class Operate
 
      public function closeConnect()
     {
-        $pdo = new Opensql();
+        $pdo = new OpenSql();
         $closeConnect = $pdo->closConnection();
 
         return $closeConnect;
@@ -26,6 +26,7 @@ class Operate
     {
         $db = $this->connect();
         $dateTime = date("Y-m-d H:i:s");
+        $resultAmount = 0;
         try {
             $db->beginTransaction();
             $lockRow = $db->prepare("SELECT * FROM `balance` WHERE `account` = :user FOR UPDATE");
@@ -40,11 +41,10 @@ class Operate
             //判斷是否為存款或提款
             if ($dealAction == 'WithDrawAmount') {
                 if ($lockRowResult['overAge'] >= $amount ) {
-                    $updateWithDraw =$db->prepare("UPDATE `balance` SET `overAge`= overAge - :withDraw WHERE `account` = :user");
+                    $updateWithDraw =$db->prepare("UPDATE `balance` SET `overAge`= `overAge` - :withDraw WHERE `account` = :user");
                     $updateWithDraw->bindParam(":withDraw", $amount);
                     $updateWithDraw->bindParam(":user", $user);
                     $updateWithDraw->execute();
-
                     //新增提款紀錄
                     $total = $lockRowResult['overAge'] - $amount;
                     $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', 0, :withDraw, :total)";
@@ -59,17 +59,18 @@ class Operate
                     }
                 }
 
-                if ($lockRowResult['overAge'] <= $amount) {
+                if ($lockRowResult['overAge'] < $amount) {
                     throw new Exception('餘額不足');
                 }
+
+                $resultAmount = $total;
             }
 
             if ($dealAction == 'SaveAmount') {
-                $updateSave =$db->prepare("UPDATE `balance` SET `overAge`= overAge + :save WHERE account = :user");
+                $updateSave =$db->prepare("UPDATE `balance` SET `overAge`= `overAge` + :save WHERE `account` = :user");
                 $updateSave->bindParam(":save", $amount);
                 $updateSave->bindParam(":user", $user);
                 $result=$updateSave->execute();
-
                 //新增存款紀錄
                 $total = $lockRowResult['overAge'] + $amount;
                 $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', :save, 0, :total)";
@@ -82,16 +83,18 @@ class Operate
                 if (!$saveDetailResult || $amount == 0) {
                     throw new Exception('存款失敗');
                 }
+
+                $resultAmount = $total;
             }
             $db->commit();
             $closedb = $this->closeConnect();
 
-            return true;
+            return $resultAmount;
         }catch (Exception $e) {
             $db->rollback();
             echo "<script>alert('".$e->getMessage()."')</script>";
 
-            return false;
+            return $resultAmount;
         }
     }
 }

@@ -41,7 +41,7 @@ class Operate
             //判斷是否為存款或提款
             if ($dealAction == 'WithDrawAmount') {
                 if ($lockRowResult['overAge'] >= $amount ) {
-                    $updateWithDraw =$db->prepare("UPDATE `balance` SET `overAge`= overAge - :withDraw, `flage` = flage + 1 WHERE `account` = :user AND `flage` = :flage");
+                    $updateWithDraw =$db->prepare("UPDATE `balance` SET `overAge` = `overAge` - :withDraw, `flage` = `flage` + 1 WHERE `account` = :user AND `flage` = :flage");
                     $updateWithDraw->bindParam(":withDraw", $amount);
                     $updateWithDraw->bindParam(":user", $user);
                     $updateWithDraw->bindParam(":flage", $version);
@@ -53,10 +53,11 @@ class Operate
 
                     //新增提款紀錄
                     $total = $lockRowResult['overAge'] - $amount;
-                    $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', 0, :withDraw, :total)";
+                    $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, :dataTime, 0, :withDraw, :total)";
                     $withDrawDetail = $db->prepare($sql);
                     $withDrawDetail->bindParam(":user", $user);
                     $withDrawDetail->bindParam(":withDraw", $amount);
+                    $withDrawDetail->bindParam(":datatTme", $dateTime);
                     $withDrawDetail->bindParam(":total", $total);
                     $withDrawDetailResult = $withDrawDetail->execute();
 
@@ -78,10 +79,11 @@ class Operate
 
                 //新增存款紀錄
                 $total = $lockRowResult["overAge"] + $amount;
-                $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, '$dateTime', :save, 0, :total)";
+                $sql = "INSERT INTO `detail` (`account`, `time`, `save`, `withdraw`, `overAge`) VALUES (:user, :datatTme, :save, 0, :total)";
                 $saveDetail = $db->prepare($sql);
                 $saveDetail->bindParam(":user", $user);
                 $saveDetail->bindParam(":save", $amount);
+                $saveDetail->bindParam(":datatTme", $dateTime);
                 $saveDetail->bindParam(":total", $total);
                 $saveDetailResult = $saveDetail->execute();
 

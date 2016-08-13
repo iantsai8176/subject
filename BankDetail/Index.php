@@ -55,7 +55,7 @@ if (($_POST["WithDrawAmount"]) != "") {
                 <span id = "msg" >
                 <?php
                     if ($input != "") {
-                        echo ($callOperation == true) ? "交易成功<br>" : "交易失敗<br>" ;
+                        echo ($callOperation != "" ) ? "交易成功<br>" : "交易失敗<br>" ;
                     }
 
                 ?>

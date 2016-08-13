@@ -1,5 +1,5 @@
 <?php
-class Opensql{
+class OpenSql{
     public static $connect = null;
     public function __construct()
     {
@@ -10,11 +10,13 @@ class Opensql{
     	self::$connect = new PDO($dbHost, $dbUser, $dbPass);
     	self::$connect->exec("set names utf8");
     }
+
     //取得
     public function getConnection()
     {
         return self::$connect;
     }
+
     //關閉
     public function closConnection()
     {
